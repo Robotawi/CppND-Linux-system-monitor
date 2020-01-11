@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -22,6 +23,7 @@ string LinuxParser::OperatingSystem() {
       std::replace(line.begin(), line.end(), '=', ' ');
       std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream linestream(line);
+
       while (linestream >> key >> value) {
         if (key == "PRETTY_NAME") {
           std::replace(value.begin(), value.end(), '_', ' ');
@@ -35,13 +37,13 @@ string LinuxParser::OperatingSystem() {
 
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::Kernel() {
-  string os, kernel;
+  string os, version, kernel;
   string line;
   std::ifstream stream(kProcDirectory + kVersionFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line);
-    linestream >> os >> kernel;
+    linestream >> os >> version >> kernel;
   }
   return kernel;
 }
@@ -64,10 +66,29 @@ vector<int> LinuxParser::Pids() {
   }
   closedir(directory);
   return pids;
-}
+} //TODO: my_parser.cpp in the src folder
 
 // TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+float LinuxParser::MemoryUtilization() {
+    string key, value;
+    string line;
+    float memutil{7.0}, memt{0.0}, memf{0.0};
+    std::ifstream filestream(kProcDirectory+kMeminfoFilename);
+    if (filestream.is_open()){
+        while(std::getline(filestream, line)){
+            //std::cout << line <<" \n";
+            std::replace(line.begin(), line.end(), ':', ' ');
+            std::istringstream stringstream(line);
+            stringstream >> key >> value ;
+            //std::cout << "got this " << key << ", and value " <<value << "\n";
+            if (key == "MemTotal"){memt = stof(value);}
+            if (key == "MemFree"){memf = stof(value);}
+        }
+        memutil = (memt - memf) / memt;
+        //std::cout <<"Memory utilization is "<< memutil << "\n";
+    }
+    return memutil;
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
