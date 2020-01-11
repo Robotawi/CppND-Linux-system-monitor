@@ -41,3 +41,25 @@ int main (){
 
     return 0;
 }*/
+
+/*
+long int LinuxParser::UpTime() {
+    long int uptime;
+    string value, line;
+    std::ifstream filestream(LinuxParser::kProcDirectory+LinuxParser::kUptimeFilename);
+    if(filestream.is_open()){
+        std::getline(filestream, line);
+        std::istringstream stringstream(line);
+        stringstream >> value;
+        uptime = std::stol(value);
+    }
+    return uptime;
+}
+
+int main(){
+    long int uptime;
+    uptime = LinuxParser::UpTime();
+    std::cout << "timy is " <<uptime << "\n";
+}
+*/
+

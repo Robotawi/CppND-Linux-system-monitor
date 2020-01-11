@@ -22,6 +22,9 @@ class System {
   std::string kernel;
   std::string os;
   float memutil{0};
+  int processes{0};
+  int runprocesses{0};
+  long int uptime;
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
