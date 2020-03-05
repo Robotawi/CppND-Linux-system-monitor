@@ -177,11 +177,12 @@ string LinuxParser::Ram(int pid) {
             //std::cout << line << "\n";
             std::istringstream stringstream(line);
             stringstream >> key >> value;
-            if (key == "VmSize"){ram = to_string(stof(value)/1024.0);}
+            if (key == "VmSize"){ram = to_string(int(stof(value)/1024.0));}
         }
     }
     return ram;
 }
+
 
 // TODO: Read and return the user ID associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -233,8 +234,10 @@ long LinuxParser::UpTime(int pid) {
         }
         pstarttime = std::stol(data)/ sysconf(_SC_CLK_TCK); //in seconds
         puptime = LinuxParser::UpTime() - pstarttime; // total sys up time - process start time in seconds, the result is in seconds
+
+        return puptime;
     }
-    return puptime;
+
 }
 float LinuxParser::CpuUtilization(int pid){
 float ptotal_time, secondsfrompstart, cpu_usage, sysuptime = UpTime(); //sysuptime is in seconds
@@ -255,6 +258,6 @@ float ptotal_time, secondsfrompstart, cpu_usage, sysuptime = UpTime(); //sysupti
 
     ptotal_time = (stof(utime) + stof(stime) + stof(cutime) + stof(cstime))/sysconf(_SC_CLK_TCK); // process time in seconds
     secondsfrompstart = sysuptime - (stof(starttime) / sysconf(_SC_CLK_TCK)); // process from the process start in seconds
-    cpu_usage = 100 * (ptotal_time/secondsfrompstart); // utilization = process time / time from its start
+    cpu_usage = ptotal_time/secondsfrompstart; // utilization = process time / time from its start
     return cpu_usage;
 }

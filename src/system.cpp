@@ -21,6 +21,10 @@ Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() {
+    if (!processes_.empty()){
+        processes_.clear();
+    }
+
     std::vector<int> procesids = LinuxParser::Pids();
     for (auto & id : procesids){
         processes_.push_back(Process(id));

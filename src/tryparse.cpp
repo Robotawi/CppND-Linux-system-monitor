@@ -16,6 +16,8 @@ using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
+#include <iomanip>
+
 /*
 int main (){
     string key, value;
@@ -167,14 +169,14 @@ string LinuxParser::Ram(int pid) {
             //std::cout << line << "\n";
             std::istringstream stringstream(line);
             stringstream >> key >> value;
-            if (key == "VmSize"){ram = to_string(stof(value)/1024.0);}
+            if (key == "VmSize"){ram = to_string(int(stof(value)/1024.0));}
         }
     }
     return ram;
 }
 
 int main(){
-    std::cout << "Ram is "<< LinuxParser::Ram(16264)<<" MB \n";
+    std::cout << "Ram is "<< LinuxParser::Ram(6538)<<" MB \n";
 
     return 0;
 }
@@ -290,7 +292,11 @@ long int LinuxParser::UpTime() {
 }
 float LinuxParser::CpuUtilization(int pid)
 {float ptotal_time, secondsfrompstart, cpu_usage, sysuptime = UpTime(); //sysuptime is in seconds
-    string line, data, utime, stime, cutime, cstime, starttime;
+    string line, data, utime, stime, cutime, cstime, starttime; string format_cpu;
+    std::ostringstream ostring;
+    ostring << std::fixed;
+    ostring << std::setprecision(2);
+
     std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
     if (filestream.is_open()){
         std::getline(filestream, line);
@@ -308,6 +314,11 @@ float LinuxParser::CpuUtilization(int pid)
     ptotal_time = (stof(utime) + stof(stime) + stof(cutime) + stof(cstime))/sysconf(_SC_CLK_TCK); // process time in seconds
     secondsfrompstart = sysuptime - (stof(starttime) / sysconf(_SC_CLK_TCK)); // process from the process start in seconds
     cpu_usage = 100 * (ptotal_time/secondsfrompstart); // utilization = process time / time from its start
+
+
+//    ostring << cpu_usage;
+//    format_cpu = ostring.str();
+//    cpu_usage = stof(cpu_usage);
     return cpu_usage;
 }
 int main(){
