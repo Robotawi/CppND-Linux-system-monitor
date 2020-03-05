@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 #include <iostream>
-
 #include "linux_parser.h"
 
 using std::stof;
 using std::stoi;
+using std::stol;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -118,8 +118,6 @@ long LinuxParser::ActiveJiffies() { return 0; }
 // TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; }
 
-
-
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
@@ -189,41 +187,32 @@ string LinuxParser::Ram(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Uid(int pid) {
     string line, key, value;
-    string user("none");
+    string userid("none");
     std::ifstream filestream(LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatusFilename);
     if(filestream.is_open()){
         while(std::getline(filestream, line)){
             std::replace(line.begin(), line.end(), ':', ' ');
             std::istringstream stringstream(line);
             stringstream >> key >> value;
-            if (key == "Uid"){user = value;}
+            if (key == "Uid"){userid = value;}
         }
     }
-    return user;
+    return userid;
 }
 
-// TODO: Read and return the user associated with a process
+// TODO: Read and return the user associated with a process, may need the input
 string LinuxParser::User(int pid) {
     string line, key, value;
-    string user("none");
-    std::ifstream filestream(LinuxParser::kProcDirectory + std::to_string(pid) + LinuxParser::kStatusFilename);
-    if(filestream.is_open()){
-        while(std::getline(filestream, line)){
-            std::replace(line.begin(), line.end(), ':', ' ');
-            std::istringstream stringstream(line);
-            stringstream >> key >> value;
-            if (key == "Uid"){user = value;}
-        }
-    }
-    filestream.close();
+    string userid = LinuxParser::Uid(pid);
+    string user{"None"};
     string x;
-    filestream.open(LinuxParser::kPasswordPath);
+    std::ifstream filestream(LinuxParser::kPasswordPath);
     if(filestream.is_open()){
         while(std::getline(filestream, line)){
             std::replace(line.begin(), line.end(), ':', ' ');
             std::istringstream stringstream(line);
             stringstream >> key >> x >> value;
-            if (value == user){user = key;}
+            if (value == userid){user = key;}
         }
     }
     return user;
@@ -233,17 +222,39 @@ string LinuxParser::User(int pid) {
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid) {
     string line, data;
-    long uptime{0};
+    long pstarttime{0}, puptime{0};
     std::ifstream filestream(kProcDirectory + to_string(pid)+ kStatFilename);
     if (filestream.is_open()){
         std::getline(filestream, line);
         std::istringstream stringstream (line);
         for (int count = 1; count <= 22; count++){
             stringstream >> data;
-            std::cout << "data is "<<data << "\n";
+//            std::cout << "data is "<<data << "\n";
         }
-        uptime = std::stol(data);
-        uptime = uptime / sysconf(_SC_CLK_TCK);
+        pstarttime = std::stol(data)/ sysconf(_SC_CLK_TCK); //in seconds
+        puptime = LinuxParser::UpTime() - pstarttime; // total sys up time - process start time in seconds, the result is in seconds
     }
-    return uptime;
+    return puptime;
+}
+float LinuxParser::CpuUtilization(int pid){
+float ptotal_time, secondsfrompstart, cpu_usage, sysuptime = UpTime(); //sysuptime is in seconds
+    string line, data, utime, stime, cutime, cstime, starttime;
+    std::ifstream filestream(kProcDirectory + to_string(pid) + kStatFilename);
+    if (filestream.is_open()){
+        std::getline(filestream, line);
+        std::istringstream stringstream(line);
+        for (int count = 1; count <=22; count ++){
+            if (count == 14) {stringstream >> utime;}
+            else if (count == 15) {stringstream >> stime;}
+            else if (count == 16) {stringstream >> cutime;}
+            else if (count == 17) {stringstream >> cstime;}
+            else if (count == 22) {stringstream >> starttime;}
+            else {stringstream >> data;}
+        }
+    }
+
+    ptotal_time = (stof(utime) + stof(stime) + stof(cutime) + stof(cstime))/sysconf(_SC_CLK_TCK); // process time in seconds
+    secondsfrompstart = sysuptime - (stof(starttime) / sysconf(_SC_CLK_TCK)); // process from the process start in seconds
+    cpu_usage = 100 * (ptotal_time/secondsfrompstart); // utilization = process time / time from its start
+    return cpu_usage;
 }

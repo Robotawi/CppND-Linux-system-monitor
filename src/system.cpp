@@ -9,6 +9,7 @@
 #include "system.h"
 #include "linux_parser.h"
 #include <iostream>
+#include <algorithm>
 
 using std::set;
 using std::size_t;
@@ -19,7 +20,15 @@ using std::vector;
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() {
+    std::vector<int> procesids = LinuxParser::Pids();
+    for (auto & id : procesids){
+        processes_.push_back(Process(id));
+    }
+    //sort the processes
+    std::sort(processes_.begin(), processes_.end(), CompProcess);
+    return processes_;
+}
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() {
@@ -54,4 +63,8 @@ int System::TotalProcesses() {
 long int System::UpTime() {
     uptime = LinuxParser::UpTime();
     return uptime;
+}
+
+ bool System::CompProcess(Process &a, Process &b) {
+    return a < b ;
 }
