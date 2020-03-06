@@ -27,7 +27,7 @@ vector<Process>& System::Processes() {
 
     std::vector<int> procesids = LinuxParser::Pids();
     for (auto & id : procesids){
-        processes_.push_back(Process(id));
+        processes_.emplace_back(Process(id));
     }
     //sort the processes
     std::sort(processes_.begin(), processes_.end(), CompProcess);
@@ -36,37 +36,32 @@ vector<Process>& System::Processes() {
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() {
-    kernel = LinuxParser::Kernel();
-    return kernel;
+    return LinuxParser::Kernel();
 }
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() {
-    memutil = LinuxParser::MemoryUtilization();
-    return memutil;
+    return LinuxParser::MemoryUtilization();
 }
 
 // TODO: Return the operating system name
 std::string System::OperatingSystem() {
-    os = LinuxParser::OperatingSystem();
-    return os; }
+    return LinuxParser::OperatingSystem();
+}
 
 // TODO: Return the number of processes actively running on the system
 int System::RunningProcesses() {
-    runprocesses = LinuxParser::RunningProcesses();
-    return runprocesses;
+    return LinuxParser::RunningProcesses();
 }
 
 // TODO: Return the total number of processes on the system
 int System::TotalProcesses() {
-    processes = LinuxParser::TotalProcesses();
-    return processes;
+    return LinuxParser::TotalProcesses();
 }
 
 // TODO: Return the number of seconds since the system started running
 long int System::UpTime() {
-    uptime = LinuxParser::UpTime();
-    return uptime;
+    return LinuxParser::UpTime();
 }
 
  bool System::CompProcess(Process &a, Process &b) {

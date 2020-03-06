@@ -6,15 +6,15 @@ using std::string;
 // INPUT: Long int measuring seconds
 // OUTPUT: HH:MM:SS
 // REMOVE: [[maybe_unused]] once you define the function
-string formatSMH(int hours){
-    string strhours{""};
-    if (hours < 10){
-        strhours = "0" + std::to_string(hours);
+string formatSMH(int val){
+    string strval{""};
+    if (val < 10){
+        strval = "0" + std::to_string(val);
     }
     else{
-        strhours = std::to_string(hours);
+        strval = std::to_string(val);
     }
-    return strhours;
+    return strval;
 }
 
 string Format::ElapsedTime(long seconds) {
@@ -23,9 +23,6 @@ string Format::ElapsedTime(long seconds) {
     minutes = seconds / 60;
     hours = minutes / 60;
 
-    //further formatting
-
-//    ftime = std::to_string(hours)+":"+std::to_string(int(minutes%60))+":"+std::to_string(int(seconds%60));
     ftime = formatSMH(hours)+":"+formatSMH(int(minutes%60))+":"+formatSMH(int(seconds%60));
     return ftime;
 }
