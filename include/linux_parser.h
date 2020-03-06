@@ -42,10 +42,6 @@ enum CPUStates {
   kGuestNice_
 };
 
-long Jiffies();
-long ActiveJiffies();
-long ActiveJiffies(int pid);
-long IdleJiffies();
 
 // Processes
 std::string Command(int pid);
