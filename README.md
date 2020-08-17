@@ -27,10 +27,11 @@ Install ncurses on your own Linux environment:
     make
     ```
 ## Running
-    From inside the build folder, the executable of the system monitor can be run as follows
-    ```
-    ./monitor
-    ```
+From inside the build folder, the executable of the system monitor can be run as follows
+
+```
+./monitor
+```
 ## Project description
 The main functionality of the project depends on parsing the linux file system files to collect data about the operating system, the processor, and the running processes.
 
