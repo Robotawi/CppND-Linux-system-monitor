@@ -1,6 +1,6 @@
 # CppND-System-Monitor
 
-This project aims at building a Linux system monitor inspired by htop. It is meant to be hands-on training for the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
+This project aims at building a Linux system monitor inspired by [htop](https://github.com/hishamhm/htop). It is meant to be hands-on training for the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
 
 ![System Monitor](images/monitor.png)
 
