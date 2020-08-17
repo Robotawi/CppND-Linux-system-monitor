@@ -7,10 +7,7 @@ This project aims at building a Linux system monitor inspired by htop. It is mea
 ## Installation
 
 - #### Prerequisite
-  - ncurses
-  
-
-[ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
+The [ncurses](https://www.gnu.org/software/ncurses/) library is required to  facilitate text-based graphical output in the terminal to display the output of the monitor.
 
 Install ncurses on your own Linux environment:
 
