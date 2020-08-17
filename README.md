@@ -1,22 +1,34 @@
 # CppND-System-Monitor
 
-This project aims at building a Linux system monitor inspired by htop. It is the hands-on training for the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
+This project aims at building a Linux system monitor inspired by htop. It is meant to be hands-on training for the Object Oriented Programming Course of the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213). 
 
 ![System Monitor](images/monitor.png)
 
 ## Installation
 
-## Prerequisite
-- ncurses
+- #### Prerequisite
+  - ncurses
   
 
 [ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
 
-Install ncurses within your own Linux environment:
+Install ncurses on your own Linux environment:
 
 `sudo apt install libncurses5-dev libncursesw5-dev`
 
-## Make
+- #### Clone 
+        ```
+        git clone https://github.com/Robotawi/CppND-Linux-system-monitor.git
+        ```
+
+- #### Setup
+        ```
+        cd CppND-System-Monitor
+        mkdir build 
+        cd build
+        cmake ..
+        make
+        ```
 This project uses [Make](https://www.gnu.org/software/make/). The Makefile has four targets:
 * `build` compiles the source code and generates an executable
 * `format` applies [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) to style the source code
