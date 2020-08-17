@@ -26,8 +26,8 @@ Install ncurses on your own Linux environment:
     cmake ..
     make
     ```
-- #### Run
-    From inside the build folder
+## Running
+    From inside the build folder, the executable of the system monitor can be run as follows
     ```
     ./monitor
     ```
